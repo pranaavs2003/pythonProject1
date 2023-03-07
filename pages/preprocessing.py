@@ -1,4 +1,5 @@
 import pandas as pd
+import os
 
 #Function to remove leading and trailing spaces
 def removeLTspaces(s):
@@ -21,6 +22,8 @@ def process(df):
 
     # Set the Semester value for NaN value
     df['semester'] = df['semester'].apply(lambda x: semester_value)
+
+    # Dropping all NaN values -> change this later when got good dataset
 
     # Convert all values to UPPERCASE
     df['route_name'] = df['route_name'].apply(lambda x: 'NOT FOUND' if type(x)==float else x.upper())
@@ -107,6 +110,7 @@ def process(df):
 
     print(df['semester'].isna().sum())
     return df
+
 
 def fatprocess(df):
 
