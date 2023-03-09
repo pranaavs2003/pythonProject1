@@ -39,8 +39,8 @@ class Transport():
         with self.instruction_container:
             st.subheader('Instructions to be followed before uploading your Dataset.')
             st.markdown('* Make sure that the uploaded dataset is in CSV format.')
-            st.markdown('* Make sure that the uploaded file is less than 200Mb')
-            st.markdown('* The Name, Register Number, Route and Destination in the dataset must not have null values.')
+            st.markdown('* The uploaded transportation CSV file mush have the following columns with the same name, registration_number, student_name, destination, route_name.')
+            st.markdown('* The registration_number, student_name, destination, route_name fields in the dataset must not have null values.')
 
     def upload(self):
         #Preprocessing is done inside this function it self
@@ -68,7 +68,13 @@ class Transport():
     def dataset(self):
         with self.dataset_container:
             st.subheader('Upload your Dataset')
-            self.preprocess()
+            try:
+                self.preprocess()
+            except:
+                st.title(
+                    'Make sure that the uploaded Dataset is formated according to the instructions and the documentation.')
+                st.write('If the uploaded dataset is not correct, you will not get the output.')
+                st.write('Make sure that the uploaded dataset is formatted properly and try again!')
 
     def group_by_route(self):
         if self.df is not None:
@@ -128,9 +134,9 @@ class Transport():
         destination_route_count = []
         for i in destination_names:
             destination_count.append(len(self.df[self.df['destination'] == i]))
-            destination_route_count.append(round((random.random() * 10) + 1))
-        df2 = pd.DataFrame(list(zip(destination_names, destination_count, destination_route_count)),
-                           columns=['Name', 'Student Count', 'Route Count'])
+            #destination_route_count.append(round((random.random() * 10) + 1))
+        df2 = pd.DataFrame(list(zip(destination_names, destination_count)),
+                           columns=['Name', 'Student Count'])
 
         return df1, df2
 
@@ -175,8 +181,11 @@ def main():
     transport.initialize_containers()
     transport.instructions()
     transport.dataset()
-    transport.output()
-    transport.overview()
+    try:
+        transport.output()
+        transport.overview()
+    except:
+        st.text('Make sure that the uploaded Dataset is formated according to the instructions and the documentation.')
 
 if __name__ == '__main__':
     main()

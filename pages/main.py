@@ -28,12 +28,13 @@ class Transport():
 
 
     def initialize_container(self):
-        st.title('Transport Management System')
+        st.title('Transport Management System for Examinations')
         st.write('##')
         st.subheader('Instructions to be followed before uploading your Dataset.')
         st.markdown('* Make sure that the uploaded dataset is in CSV format.')
-        st.markdown('* Make sure that the uploaded file is less than 200Mb')
-        st.markdown('* The Name, Register Number, Route and Destination in the dataset must not have null values.')
+        st.markdown('* The uploaded transportation CSV file mush have the following columns with the same name, registration_number, student_name, destination, route_number, route_name.')
+        st.markdown('* The uploaded examination CSV file mush have the following columns with the same name exam_date, registration_number, student_name, session_name, slot_name.')
+        st.markdown('* Wait for few seconds after the first dataset has processed, and then upload the second dataset.')
         st.write('##')
 
         self.dataset_container = st.container()
@@ -44,42 +45,37 @@ class Transport():
         self.date_con = st.container()
         self.combine_con  = st.container()
 
-    # def instructions(self):
-    #     with self.instruction_container:
-    #         st.subheader('Instructions to be followed before uploading your Dataset.')
-    #         st.markdown('* Make sure that the uploaded dataset is in CSV format.')
-    #         st.markdown('* Make sure that the uploaded file is less than 200Mb')
-    #         st.markdown('* The Name, Register Number, Route and Destination in the dataset must not have null values.')
-        
-
     def upload(self):
-        #Preprocessing is done inside this function it self
-        #uploaded_file = st.multiselect("Upload a CSV file.",["fat_wise_1.csv", "TransportRegistrationCSVnew.csv"])
-        # uploaded_file1 = st.file_uploader("Upload a CSV file.", type={"csv", "txt"},key='unique_key1')
-        file1 = st.file_uploader("Choose the Transpotation file:")
+        file1 = st.file_uploader("Choose the Transportation file:")
         file2 = st.file_uploader("Choose the Examination file:")
         if file1 and file2:
-        # Do something with the files
-            st.success("Transpotation Files uploaded successfully!")
+            st.success("Transportation Files uploaded successfully!")
         else:
             st.warning("Please upload both files.") 
         if file1 is not None :
                 self.df = pd.read_csv(file1, encoding='latin1')
 
-                with st.spinner('Preprocessing your Transpotation Dataset, Wait a Second...'):
+                with st.spinner('Preprocessing your Transportation Dataset, Wait a Second...'):
                     time.sleep(3)
-                st.success('Your Transpotation Dataset is precessed Successfully!')
+                st.success('Your Transportation Dataset is precessed Successfully!')
                 st.write('##')
-                st.markdown('Preview of the processed Transpotation Dataset')
-                st.write(process(self.df))
-                st.download_button(
-                    "Download the processed Transpotation Data",
-                    self.df.to_csv(index=False).encode('latin1'),
-                    "Processed_dataset.csv",
-                    "text/csv",
-                    key='download-csv'
-                )
-                self.overview(self.df)
+                st.markdown('Preview of the processed Transportation Dataset')
+                try:
+                    st.write(process(self.df))
+                    st.download_button(
+                        "Download the processed Transportation Data",
+                        self.df.to_csv(index=False).encode('latin1'),
+                        "Processed_dataset.csv",
+                        "text/csv",
+                        key='download-csv'
+                    )
+                    self.overview(self.df)
+                except:
+                    st.title(
+                        'Make sure that the uploaded Dataset is formated according to the instructions and the documentation.')
+                    st.write('If the uploaded dataset is not correct, you will not get the output.')
+                    st.write('Make sure that the uploaded dataset is formatted properly and try again!')
+
         if file2 is not None:
                 self.df1 = pd.read_csv(file2,encoding='latin1')
                 self.df1.rename(columns = {'EXAM TYPE':'exam_type', 'EXAM DATE':'exam_date', 'SESSION NAME':'session_name', 'SLOT NAME':'slot_name', 'REG NO':'registration_number', 'STUDENT NAME':'student_name'}, inplace=True)
@@ -89,48 +85,24 @@ class Transport():
                 st.success('Your Examination Dataset is precessed Successfully!')
                 st.write('##')
                 st.markdown('Preview of the Processed Examination Dataset')
-                st.write(fatprocess(self.df1))
-
-                # st.write(fatprocess(self.df))
-                st.download_button(
-                    "Download the processed Examination Data",
-                    self.df.to_csv(index=False).encode('latin1'),
-                    "Processed_dataset.csv",
-                    "text/csv",
-                    key='download-csv1'
-                )
-                
-        # if file2 is not None :
-        #         self.df1 = pd.read_csv(file1, encoding='latin1')
-        #         with st.spinner('Preprocessing Fat Dataset, Wait a Second...'):
-        #             time.sleep(3)
-        #         st.success('Fat Dataset is precessed Successfully!')
-        #         st.write('##')
-        #         st.markdown('Preview of the Dataset')
-                
-
-    # def preprocess(self):
-        # uploaded_file = self.upload()
-            # if uploaded_file is not None :
-            #     self.df = pd.read_csv(uploaded_file, encoding='latin1')
-
-            #     with st.spinner('Preprocessing your Dataset, Wait a Second...'):
-            #         time.sleep(3)
-            #     st.success('Your Dataset is precessed Successfully!')
-            #     st.write('##')
-            #     st.markdown('Preview of the Dataset')
-            #     st.write(process(self.df))
-            #     st.download_button(
-            #         "Download the processed Data",
-            #         self.df.to_csv(index=False).encode('latin1'),
-            #         "Processed_dataset.csv",
-            #         "text/csv",
-            #         key='download-csv'
-            #     )
+                try:
+                    st.write(fatprocess(self.df1))
+                    st.download_button(
+                        "Download the processed Examination Data",
+                        self.df.to_csv(index=False).encode('latin1'),
+                        "Processed_dataset.csv",
+                        "text/csv",
+                        key='download-csv1'
+                    )
+                except:
+                    st.title(
+                        'Make sure that the uploaded Dataset is formated according to the instructions and the documentation.')
+                    st.write('If the uploaded dataset is not correct, you will not get the output.')
+                    st.write('Make sure that the uploaded dataset is formatted properly and try again!')
 
     def dataset(self):
         with self.dataset_container:
-            st.subheader('Upload Transpotation and Examination Dataset')
+            st.subheader('Upload Transportation and Examination Dataset')
             self.upload()
 
     def group_by_route(self):
@@ -179,6 +151,8 @@ class Transport():
                         mime="application/vnd.ms-excel2",
                         disabled=done2
                     )
+            for i in range(4):
+                st.write('##')
 
     def getCount(self,d):
         route_names = d['route_name'].unique()
@@ -196,9 +170,9 @@ class Transport():
         destination_route_count = []
         for i in destination_names:
             destination_count.append(len(d[d['destination'] == i]))
-            destination_route_count.append(round((random.random() * 10) + 1))
-        df2 = pd.DataFrame(list(zip(destination_names, destination_count, destination_route_count)),
-                           columns=['Name', 'Student Count', 'Route Count'])
+            #destination_route_count.append(round((random.random() * 10) + 1))
+        df2 = pd.DataFrame(list(zip(destination_names, destination_count)),
+                           columns=['Name', 'Student Count'])
 
         return df1, df2
 
@@ -258,6 +232,14 @@ class Transport():
         st.subheader("Preview of the Combined Dataset")
         self.combined = pd.merge(self.df1,self.df, on='registration_number')
         st.write(self.combined)
+        # tab1.download_button(
+        #     label="Download",
+        #     data=self.combined,
+        #     file_name="Combined_student_data.xlsx",
+        #     mime="application/vnd.ms-excel3"
+        # )
+        for i in range(4):
+            st.write('##')
     
     def date(self,a):
         self.match=self.combined[self.combined['exam_date']==a]
@@ -281,16 +263,10 @@ class Transport():
             self.overview(self.match1)
 
 
-
     def slot(self,a):
         if a is not None:
             self.match=self.combined[self.combined['slot_name']==a]
             self.match1=pd.concat([self.match1,self.match])
-            # st.write(self.match1)
-        # st.text('Route and destination wise count for ',a)
-        
-
-        # st.write(self.match)  
 
     def slotcon(self):
         if self.df is not None and self.df1 is not None:
@@ -304,15 +280,6 @@ class Transport():
                 self.checkdate()
 
 
-
-
-
-    # def side(self):
-    #     st.sidebar.header("Navigation")
-    #     with self.dataset_container:
-    #         if st.sidebar().button("Run my_function"):
-    #             self.checkslot()
-
 def main():
     transport = Transport()
 
@@ -320,13 +287,15 @@ def main():
     # transport.instructions()
 
     transport.dataset()
-    transport.outputcon()
-    # transport.comb()
-    transport.slotcon()
-    # transport.checkslot()
-    transport.datecon()
-    # transport.checkdate()
-
+    try:
+        transport.outputcon()
+        transport.slotcon()
+        transport.datecon()
+    except:
+        st.title(
+            'Make sure that the uploaded Dataset is formated according to the instructions and the documentation.')
+        st.write('If the uploaded dataset is not correct, you will not get the output.')
+        st.write('Make sure that the uploaded dataset is formatted properly and try again!')
 
 if __name__ == '__main__':
     main()
