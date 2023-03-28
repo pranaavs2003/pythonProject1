@@ -16,11 +16,11 @@ def removeLTspaces(s):
 
 def process(df):
     semester_value = 'CH2022231'
-    column_names = ['semester', 'route_name', 'registration_number', 'student_name', 'student_name', 'gender',
+    column_names = ['route_name', 'registration_number', 'student_name', 'student_name', 'gender',
                     'destination', 'fp_reference_number']
 
     # Set the Semester value for NaN value
-    df['semester'] = df['semester'].apply(lambda x: semester_value)
+    #df['semester'] = df['semester'].apply(lambda x: semester_value)
 
     # Convert all values to UPPERCASE
     df['route_name'] = df['route_name'].apply(lambda x: 'NOT FOUND' if type(x)==float else x.upper())
@@ -105,7 +105,7 @@ def process(df):
     df = df.sort_values(by=['route_name', 'destination', 'registration_number', 'student_name'])
 
 
-    print(df['semester'].isna().sum())
+    # print(df['semester'].isna().sum())
     return df
 
 def fatprocess(df):

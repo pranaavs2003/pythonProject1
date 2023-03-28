@@ -10,24 +10,22 @@ def group_by_route(df):
 
     for i in route_names:
         worksheet = workbook.add_worksheet(name=i)
-        worksheet.write('A1', 'semester')
-        worksheet.write('B1', 'route_name')
-        worksheet.write('C1', 'registration_number')
-        worksheet.write('D1', 'student_name')
+        worksheet.write('A1', 'route_name')
+        worksheet.write('B1', 'registration_number')
+        worksheet.write('C1', 'student_name')
         #worksheet.write('E1', 'gender')
-        worksheet.write('E1', 'destination')
-        worksheet.write('F1', 'fp_reference_number')
+        worksheet.write('D1', 'destination')
+        worksheet.write('E1', 'fp_reference_number')
         n = len(group_by_route_name.get_group(i))
         data = group_by_route_name.get_group(i)
         for j in range(n):
-            worksheet.write('A'+str(j+2), data.iloc[j].semester)
-            worksheet.write('B'+str(j+2), data.iloc[j].route_name)
-            worksheet.write('C'+str(j+2), data.iloc[j].registration_number)
-            worksheet.write('D'+str(j+2), data.iloc[j].student_name)
+            worksheet.write('A'+str(j+2), data.iloc[j].route_name)
+            worksheet.write('B'+str(j+2), data.iloc[j].registration_number)
+            worksheet.write('C'+str(j+2), data.iloc[j].student_name)
             #worksheet.write('E'+str(j+2), data.iloc[j].gender)
-            worksheet.write('E'+str(j+2), data.iloc[j].destination)
+            worksheet.write('D'+str(j+2), data.iloc[j].destination)
             try:
-                worksheet.write('G'+str(j+2), data.iloc[j].fp_reference_number)
+                worksheet.write('E'+str(j+2), data.iloc[j].fp_reference_number)
             except:
                 pass
 
@@ -42,24 +40,24 @@ def group_by_destination(df):
 
     for i in destination_names:
         worksheet = workbook.add_worksheet(name=i[:31])
-        worksheet.write('A1', 'semester')
-        worksheet.write('B1', 'route_name')
-        worksheet.write('C1', 'registration_number')
-        worksheet.write('D1', 'student_name')
+        #worksheet.write('A1', 'semester')
+        worksheet.write('A1', 'route_name')
+        worksheet.write('B1', 'registration_number')
+        worksheet.write('C1', 'student_name')
         #worksheet.write('E1', 'gender')
-        worksheet.write('E1', 'destination')
-        worksheet.write('F1', 'fp_reference_number')
+        worksheet.write('D1', 'destination')
+        worksheet.write('E1', 'fp_reference_number')
         n = len(group_by_destination_name.get_group(i))
         data = group_by_destination_name.get_group(i)
         for j in range(n):
-            worksheet.write('A'+str(j+2), data.iloc[j].semester)
-            worksheet.write('B'+str(j+2), data.iloc[j].route_name)
-            worksheet.write('C'+str(j+2), data.iloc[j].registration_number)
-            worksheet.write('D'+str(j+2), data.iloc[j].student_name)
+            #worksheet.write('A'+str(j+2), data.iloc[j].semester)
+            worksheet.write('A'+str(j+2), data.iloc[j].route_name)
+            worksheet.write('B'+str(j+2), data.iloc[j].registration_number)
+            worksheet.write('C'+str(j+2), data.iloc[j].student_name)
             #worksheet.write('E'+str(j+2), data.iloc[j].gender)
-            worksheet.write('E'+str(j+2), data.iloc[j].destination)
+            worksheet.write('D'+str(j+2), data.iloc[j].destination)
             try:
-                worksheet.write('G'+str(j+2), data.iloc[j].fp_reference_number)
+                worksheet.write('E'+str(j+2), data.iloc[j].fp_reference_number)
             except:
                 pass
 

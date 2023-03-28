@@ -17,11 +17,11 @@ def removeLTspaces(s):
 
 def process(df):
     semester_value = 'CH2022231'
-    column_names = ['semester', 'route_name', 'registration_number', 'student_name', 'student_name', 'gender',
+    column_names = ['route_name', 'registration_number', 'student_name', 'student_name', 'gender',
                     'destination', 'fp_reference_number']
 
     # Set the Semester value for NaN value
-    df['semester'] = df['semester'].apply(lambda x: semester_value)
+    #df['semester'] = df['semester'].apply(lambda x: semester_value)
 
     # Dropping all NaN values -> change this later when got good dataset
 
