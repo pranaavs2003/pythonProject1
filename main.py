@@ -68,13 +68,13 @@ class Transport():
     def dataset(self):
         with self.dataset_container:
             st.subheader('Upload your Dataset')
-            try:
-                self.preprocess()
-            except:
-                st.title(
-                    'Make sure that the uploaded Dataset is formated according to the instructions and the documentation.')
-                st.write('If the uploaded dataset is not correct, you will not get the output.')
-                st.write('Make sure that the uploaded dataset is formatted properly and try again!')
+            # try:
+            self.preprocess()
+            # except:
+            #     st.title(
+            #         'Make sure that the uploaded Dataset is formated according to the instructions and the documentation.')
+            #     st.write('If the uploaded dataset is not correct, you will not get the output.')
+            #     st.write('Make sure that the uploaded dataset is formatted properly and try again!')
 
     def group_by_route(self):
         if self.df is not None:
