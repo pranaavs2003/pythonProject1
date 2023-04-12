@@ -27,7 +27,7 @@ def combined(df):
         if('route_number' in df.columns):
             worksheet.write('D1', 'route_number')
         if('route_name' in df.columns):
-            worksheet.write('E1', 'fp_reference_number')
+            worksheet.write('E1', 'route_name')
         for j in range(df.shape[0]):
             if('registration_number' in df.columns):
                 worksheet.write('A'+str(j+2), df.iloc[j].registration_number)
