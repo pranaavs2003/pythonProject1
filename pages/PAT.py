@@ -12,6 +12,36 @@ from exports import group_by_destination
 from exports import getRouteCount
 from exports import getDestinationCount
 
+def combined(df):
+    output = BytesIO()
+    workbook = xlsxwriter.Workbook(output, {'in_memory': True})
+    worksheet = workbook.add_worksheet(name='Combined')
+
+    for i in range(df.shape[1]):
+        if('registration_number' in df.columns):
+            worksheet.write('A1', 'registration_number')
+        if('student_name_x' in df.columns):
+            worksheet.write('B1', 'student_name_x')
+        if('destination' in df.columns):
+            worksheet.write('C1', 'destination')
+        if('route_number' in df.columns):
+            worksheet.write('D1', 'route_number')
+        if('route_name' in df.columns):
+            worksheet.write('E1', 'fp_reference_number')
+        for j in range(df.shape[0]):
+            if('registration_number' in df.columns):
+                worksheet.write('A'+str(j+2), df.iloc[j].registration_number)
+            if('student_name_x' in df.columns):
+                worksheet.write('B'+str(j+2), df.iloc[j].student_name_x)
+            if('destination' in df.columns):
+                worksheet.write('C'+str(j+2), df.iloc[j].destination)
+            if('route_number' in df.columns):
+                worksheet.write('D'+str(j+2), df.iloc[j].route_number)
+            if('route_name' in df.columns):
+                worksheet.write('E'+str(j+2), df.iloc[j].route_name)
+    workbook.close()
+    return output
+
 class Transport():
 
     def __init__(self, df = None,df1= None, dataset_container = [], instruction_container = [], output_container = [], overview_container = [], slot_con = [], date_con = [],combine_con = [], combined=None):
@@ -173,6 +203,30 @@ class Transport():
             #destination_route_count.append(round((random.random() * 10) + 1))
         df2 = pd.DataFrame(list(zip(destination_names, destination_count)),
                            columns=['Name', 'Student Count'])
+        
+        if('route_number' in self.df.columns):
+            unique_routes = self.df['route_name'].unique()
+            dic = {}
+            for i in unique_routes:
+                dic[i] = []
+
+            for i in range(self.df.shape[0]):
+                curr_route = self.df.iloc[i]['route_name']
+                curr_num = self.df.iloc[i]['route_number']
+                if curr_num not in dic[curr_route]:
+                    dic[curr_route].append(curr_num)
+
+            for i in list(dic.keys()):
+                res = ""
+                for j in dic[i]:
+                    res += str(j) + ', '
+                dic[i] = res
+            droute_name = list(dic.keys())
+            droute_number = [dic[i] for i in droute_name]
+
+            df_number = pd.DataFrame(list(zip(droute_name, droute_number)), columns=['Name', 'route_number'])
+            for i in range(df1.shape[0]):
+                df1['route_number'] = df_number['route_number']   
 
         return df1, df2
 
@@ -232,12 +286,15 @@ class Transport():
         st.subheader("Preview of the Combined Dataset")
         self.combined = pd.merge(self.df1,self.df, on='registration_number')
         st.write(self.combined)
-        # tab1.download_button(
-        #     label="Download",
-        #     data=self.combined,
-        #     file_name="Combined_student_data.xlsx",
-        #     mime="application/vnd.ms-excel3"
-        # )
+        output_combined = combined(self.combined)
+        cn1 = st.container()
+        cn1.download_button(
+            label="Download",
+            data=output_combined.getvalue(),
+            file_name="Combined_student_data.xlsx",
+            mime="application/vnd.ms-excel3"
+        )
+        
         for i in range(4):
             st.write('##')
     

@@ -134,9 +134,32 @@ class Transport():
         destination_route_count = []
         for i in destination_names:
             destination_count.append(len(self.df[self.df['destination'] == i]))
-            #destination_route_count.append(round((random.random() * 10) + 1))
         df2 = pd.DataFrame(list(zip(destination_names, destination_count)),
                            columns=['Name', 'Student Count'])
+        
+        if('route_number' in self.df.columns):
+            unique_routes = self.df['route_name'].unique()
+            dic = {}
+            for i in unique_routes:
+                dic[i] = []
+
+            for i in range(self.df.shape[0]):
+                curr_route = self.df.iloc[i]['route_name']
+                curr_num = self.df.iloc[i]['route_number']
+                if curr_num not in dic[curr_route]:
+                    dic[curr_route].append(curr_num)
+
+            for i in list(dic.keys()):
+                res = ""
+                for j in dic[i]:
+                    res += str(j) + ', '
+                dic[i] = res
+            droute_name = list(dic.keys())
+            droute_number = [dic[i] for i in droute_name]
+
+            df_number = pd.DataFrame(list(zip(droute_name, droute_number)), columns=['Name', 'route_number'])
+            for i in range(df1.shape[0]):
+                df1['route_number'] = df_number['route_number']                
 
         return df1, df2
 
@@ -181,11 +204,11 @@ def main():
     transport.initialize_containers()
     transport.instructions()
     transport.dataset()
-    try:
-        transport.output()
-        transport.overview()
-    except:
-        st.text('Make sure that the uploaded Dataset is formated according to the instructions and the documentation.')
+    #try:
+    transport.output()
+    transport.overview()
+    #except:
+        #st.text('Make sure that the uploaded Dataset is formated according to the instructions and the documentation.')
 
 if __name__ == '__main__':
     main()
