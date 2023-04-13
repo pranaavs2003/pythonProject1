@@ -181,7 +181,7 @@ class Transport():
                     tab1.subheader('Routes')
                     tab1.write(df1)
                     output = getRouteCount(self.df)
-                    print('🀄', self.df)
+                    #print('🀄', self.df)
                     tab1.download_button(
                         label="Download",
                         data=output.getvalue(),

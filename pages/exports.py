@@ -63,8 +63,10 @@ def group_by_destination(df):
     return output
 
 def combined(df):
+    route_names = df['route_name'].unique()
     output = BytesIO()
     workbook = xlsxwriter.Workbook(output, {'in_memory': True})
+    group_by_route_name = df.groupby('destination')
 
     for i in route_names:
         worksheet = workbook.add_worksheet(name=i)
@@ -94,27 +96,27 @@ def combined(df):
 
 def getRouteCount(df):
     if('route_number' in df.columns):
-            unique_routes = df['route_name'].unique()
-            dic = {}
-            for i in unique_routes:
-                dic[i] = []
+        unique_routes = df['route_name'].unique()
+        dic = {}
+        for i in unique_routes:
+            dic[i] = []
 
-            for i in range(df.shape[0]):
-                curr_route = df.iloc[i]['route_name']
-                curr_num = df.iloc[i]['route_number']
-                if curr_num not in dic[curr_route]:
-                    dic[curr_route].append(curr_num)
+        for i in range(df.shape[0]):
+            curr_route = df.iloc[i]['route_name']
+            curr_num = df.iloc[i]['route_number']
+            if curr_num not in dic[curr_route]:
+                dic[curr_route].append(curr_num)
 
-            for i in list(dic.keys()):
-                res = ""
-                for j in dic[i]:
-                    res += str(j) + ', '
-                dic[i] = res
-            droute_name = list(dic.keys())
-            droute_number = [dic[i] for i in droute_name]
+        for i in list(dic.keys()):
+            res = ""
+            for j in dic[i]:
+                res += str(j) + ', '
+            dic[i] = res
+        droute_name = list(dic.keys())
+        droute_number = [dic[i] for i in droute_name]
 
-            df_number = pd.DataFrame(list(zip(droute_name, droute_number)), columns=['Name', 'route_number'])
-            print(df_number)
+        df_number = pd.DataFrame(list(zip(droute_name, droute_number)), columns=['Name', 'route_number'])
+        #print(df_number)
             
             #Main code
     route_names = df['route_name'].unique()
@@ -131,10 +133,11 @@ def getRouteCount(df):
     for j in route_names:
         worksheet.write('A' + str(c + 2), j)
         worksheet.write('B' + str(c + 2), str(len(df[df['route_name'] == j])))
-        try:
-            worksheet.write('C'+str(j+2), df_number.iloc[c].route_number)
-        except:
-            pass
+        #try:
+        #print("🃏" ,'C'+str(c+2), df_number.iloc[c].route_number)
+        worksheet.write('C'+str(c+2), df_number.iloc[c].route_number)
+        # except:
+        #     pass
         c += 1
 
     workbook.close()
