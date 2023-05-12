@@ -106,7 +106,7 @@ def process(df):
 
     # Sort the values in the dataframe
     df = df.sort_values(by=['route_name', 'destination', 'registration_number', 'student_name'])
-
+    a
 
     #print(df['semester'].isna().sum())
     return df
