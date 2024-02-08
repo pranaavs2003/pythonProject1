@@ -9,7 +9,7 @@ def group_by_route(df):
     workbook = xlsxwriter.Workbook(output, {'in_memory': True})
 
     for i in route_names:
-        worksheet = workbook.add_worksheet(name=i)
+        worksheet = workbook.add_worksheet(name=i[:30])
         worksheet.write('A1', 'route_name')
         worksheet.write('B1', 'registration_number')
         worksheet.write('C1', 'student_name')
